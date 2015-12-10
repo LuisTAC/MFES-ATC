@@ -1,0 +1,36 @@
+class Plane
+
+types
+	
+	-- TODO Define types here
+	
+values
+	
+	-- TODO Define values here
+	
+instance variables
+	
+	location : Coords;
+	
+operations
+
+	public Plane: int * int ==> Plane
+	Plane(a,b) ==
+	(
+		location := new Coords(a,b); return self;
+	);
+	--TODO post
+	
+	public getLocation: () ==> Coords
+	getLocation() == return location
+	post RESULT = location;
+	
+functions
+
+	-- TODO Define functiones here
+	
+traces
+
+	-- TODO Define Combinatorial Test Traces here
+	
+end Plane
