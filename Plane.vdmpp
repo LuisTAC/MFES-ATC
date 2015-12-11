@@ -10,6 +10,7 @@ values
 	
 instance variables
 	
+	id : char;
 	location : Coords;
 	destination : Coords;
 	max_speed : nat;
@@ -20,9 +21,10 @@ instance variables
 		
 operations
 
-	public Plane: int * int * int * int * nat * nat * String ==> Plane
-	Plane(loc_x,loc_y,dest_x,dest_y,max,speed_init, dir) ==
+	public Plane: char * int * int * int * int * nat * nat * String ==> Plane
+	Plane(chr, loc_x,loc_y,dest_x,dest_y,max,speed_init, dir) ==
 	(
+		id := chr;
 		location := new Coords(loc_x,loc_y);
 		destination := new Coords(dest_x,dest_y);
 		max_speed := max;
@@ -57,6 +59,10 @@ operations
 	pre str in set elems dirs
 	post RESULT in set inds dirs;
 	
+	public getID: () ==> char
+	getID() == return id
+	post RESULT = id;
+	
 	public getLocation: () ==> Coords
 	getLocation() == return location
 	post RESULT = location;
@@ -90,6 +96,22 @@ operations
 		direction := getDirectionStr(ind);
 	)
 	post direction in set elems dirs;
+	
+	public move: () ==> ()
+	move() ==
+	(
+		cases direction :
+			"N" -> location.setY(location.getY()-1),
+			"NE" -> (location.setY(location.getY()-1); location.setX(location.getX()+1)),
+			"E" -> location.setX(location.getX()+1),
+			"SE" -> (location.setY(location.getY()+1); location.setX(location.getX()+1)),
+			"S" -> location.setY(location.getY()+1),
+			"SW" -> (location.setY(location.getY()+1); location.setX(location.getX()-1)),
+			"W" -> location.setX(location.getX()-1),
+			"NW" -> (location.setY(location.getY()-1); location.setX(location.getX()-1))
+		end
+	)
+	post direction<>direction~;
 	
 functions
 
