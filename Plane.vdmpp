@@ -1,29 +1,95 @@
 class Plane
 
 types
-	
-	-- TODO Define types here
+
+	public String = seq of char;
 	
 values
 	
-	-- TODO Define values here
+	public static dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 	
 instance variables
 	
 	location : Coords;
-	
+	destination : Coords;
+	max_speed : nat;
+	speed : nat;
+	inv speed <=max_speed;
+	direction : String;
+	inv direction in set elems dirs;
+		
 operations
 
-	public Plane: int * int ==> Plane
-	Plane(a,b) ==
+	public Plane: int * int * int * int * nat * nat * String ==> Plane
+	Plane(loc_x,loc_y,dest_x,dest_y,max,speed_init, dir) ==
 	(
-		location := new Coords(a,b); return self;
-	);
+		location := new Coords(loc_x,loc_y);
+		destination := new Coords(dest_x,dest_y);
+		max_speed := max;
+		speed := speed_init;
+		direction := dir;
+		return self;
+	)
+	pre ((loc_x<>dest_x) or (loc_y<>dest_y)) and (max>=speed_init) and (dir in set elems dirs);
 	--TODO post
+	
+	public static getDirectionStr: nat ==> String
+	getDirectionStr(ind) ==
+	(
+		dcl dirs_aux: seq of String :=dirs;
+		for i=1 to ind-1 by 1 do dirs_aux := tl dirs_aux;
+		return hd dirs_aux;
+	)
+	pre ind in set inds dirs
+	post RESULT in set elems dirs;
+	
+	public static getDirectionInd: String ==> nat
+	getDirectionInd(str) ==
+	(
+		dcl dirs_aux: seq of String :=dirs;
+		for i=1 to len dirs by 1 do
+		(
+			if hd dirs_aux<>str then dirs_aux := tl dirs_aux
+			else return i;
+		);
+		return 0;
+	)
+	pre str in set elems dirs
+	post RESULT in set inds dirs;
 	
 	public getLocation: () ==> Coords
 	getLocation() == return location
 	post RESULT = location;
+	
+	public getMaxSpeed: () ==> nat
+	getMaxSpeed() == return max_speed
+	post RESULT = max_speed;
+	
+	public getSpeed: () ==> nat
+	getSpeed() == return speed
+	post RESULT = speed;
+	
+	public getDirection: () ==> String
+	getDirection() == return direction
+	post RESULT = direction;
+		
+	public rotCW: () ==> ()
+	rotCW() ==
+	(
+		dcl ind : nat := getDirectionInd(direction);
+		if(ind=8) then ind := 1 else ind := ind+1;
+		direction := getDirectionStr(ind);
+	)
+	post direction in set elems dirs;
+	
+	public rotCCW: () ==> ()
+	rotCCW() ==
+	(
+		dcl ind : nat := getDirectionInd(direction);
+		if(ind=1) then ind := 8 else ind := ind-1;
+		direction := getDirectionStr(ind);
+	)
+	post direction in set elems dirs;
 	
 functions
 
