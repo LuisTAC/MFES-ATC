@@ -34,7 +34,7 @@ operations
 		
 	public equals: Coords ==>bool
 		equals(c) == return x = c.x and y = c.y
-		post RESULT = x = c.x and y = c.y;
+		post RESULT = (x = c.x and y = c.y);
 	
 	public setX: int ==> ()
 		setX(a) == x:=a
