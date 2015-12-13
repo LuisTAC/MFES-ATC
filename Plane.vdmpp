@@ -3,10 +3,11 @@ class Plane
 types
 
 	public String = seq of char;
+	public Direction = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
 	
 values
 	
-	public static dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+	-- TODO Define values here
 	
 instance variables
 	
@@ -16,12 +17,11 @@ instance variables
 	max_speed : nat;
 	speed : nat;
 	inv speed <=max_speed;
-	direction : String;
-	inv direction in set elems dirs;
+	direction : Direction;
 		
 operations
 
-	public Plane: char * int * int * int * int * nat * nat * String ==> Plane
+	public Plane: char * int * int * int * int * nat * nat * Direction ==> Plane
 	Plane(chr, loc_x,loc_y,dest_x,dest_y,max,speed_init, dir) ==
 	(
 		id := chr;
@@ -32,33 +32,9 @@ operations
 		direction := dir;
 		return self;
 	)
-	pre ((loc_x<>dest_x) or (loc_y<>dest_y)) and (max>=speed_init) and (dir in set elems dirs);
+	pre ((loc_x<>dest_x) or (loc_y<>dest_y)) and (max>=speed_init);
 	--TODO post
-	
-	public static getDirectionStr: nat ==> String
-	getDirectionStr(ind) ==
-	(
-		dcl dirs_aux: seq of String :=dirs;
-		for i=1 to ind-1 by 1 do dirs_aux := tl dirs_aux;
-		return hd dirs_aux;
-	)
-	pre ind in set inds dirs
-	post RESULT in set elems dirs;
-	
-	public static getDirectionInd: String ==> nat
-	getDirectionInd(str) ==
-	(
-		dcl dirs_aux: seq of String :=dirs;
-		for i=1 to len dirs by 1 do
-		(
-			if hd dirs_aux<>str then dirs_aux := tl dirs_aux
-			else return i;
-		);
-		return 0;
-	)
-	pre str in set elems dirs
-	post RESULT in set inds dirs;
-	
+		
 	public getID: () ==> char
 	getID() == return id
 	post RESULT = id;
@@ -75,40 +51,53 @@ operations
 	getSpeed() == return speed
 	post RESULT = speed;
 	
-	public getDirection: () ==> String
+	public getDirection: () ==> Direction
 	getDirection() == return direction
 	post RESULT = direction;
 		
 	public rotCW: () ==> ()
 	rotCW() ==
 	(
-		dcl ind : nat := getDirectionInd(direction);
-		if(ind=8) then ind := 1 else ind := ind+1;
-		direction := getDirectionStr(ind);
-	)
-	post direction in set elems dirs;
+		cases direction :
+		<N> -> direction:= <NE>,
+		<NE> -> direction:= <E>,
+		<E> -> direction:= <SE>,
+		<SE> -> direction:= <S>,
+		<S> -> direction:= <SW>,
+		<SW> -> direction:= <W>,
+		<W> -> direction:= <NW>,
+		<NW> -> direction:= <N>
+		end;
+	);
 	
 	public rotCCW: () ==> ()
 	rotCCW() ==
 	(
-		dcl ind : nat := getDirectionInd(direction);
-		if(ind=1) then ind := 8 else ind := ind-1;
-		direction := getDirectionStr(ind);
-	)
-	post direction in set elems dirs;
+		-- Direction = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
+		cases direction :
+		<N> -> direction:= <NW>,
+		<NW> -> direction:= <W>,
+		<W> -> direction:= <SW>,
+		<SW> -> direction:= <S>,
+		<S> -> direction:= <SE>,
+		<SE> -> direction:= <E>,
+		<E> -> direction:= <NE>,
+		<NE> -> direction:= <N>
+		end;
+	);
 	
 	public move: () ==> ()
 	move() ==
 	(
 		cases direction :
-			"N" -> location.setY(location.getY()-1),
-			"NE" -> (location.setY(location.getY()-1); location.setX(location.getX()+1)),
-			"E" -> location.setX(location.getX()+1),
-			"SE" -> (location.setY(location.getY()+1); location.setX(location.getX()+1)),
-			"S" -> location.setY(location.getY()+1),
-			"SW" -> (location.setY(location.getY()+1); location.setX(location.getX()-1)),
-			"W" -> location.setX(location.getX()-1),
-			"NW" -> (location.setY(location.getY()-1); location.setX(location.getX()-1))
+			<N> -> location.setY(location.getY()-1),
+			<NE> -> (location.setY(location.getY()-1); location.setX(location.getX()+1)),
+			<E> -> location.setX(location.getX()+1),
+			<SE> -> (location.setY(location.getY()+1); location.setX(location.getX()+1)),
+			<S> -> location.setY(location.getY()+1),
+			<SW> -> (location.setY(location.getY()+1); location.setX(location.getX()-1)),
+			<W> -> location.setX(location.getX()-1),
+			<NW> -> (location.setY(location.getY()-1); location.setX(location.getX()-1))
 		end
 	)
 	post direction<>direction~;
