@@ -1,23 +1,22 @@
 class Airport
 
 types
-
-	-- TODO Define types here
-	
+	public Direction  = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
 values
 	
-	-- TODO Define values here
-	
 instance variables
-
 	location : Coords;
+	direction : Direction;
+	planes : seq of Plane;
 	
 operations
 
-	public Airport: int * int ==> Airport
-	Airport(a,b) ==
+	public Airport: int * int * Direction ==> Airport
+	Airport(a,b, dir) ==
 	(
-		location := new Coords(a,b); return self;
+		location := new Coords(a,b);
+		direction := dir; 
+		return self;
 	);
 	--TODO post
 	
@@ -26,11 +25,7 @@ operations
 	post RESULT = location;
 
 functions
-
-	-- TODO Define functiones here
 	
 traces
-
-	-- TODO Define Combinatorial Test Traces here
 	
 end Airport
