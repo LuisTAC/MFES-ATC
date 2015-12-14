@@ -7,15 +7,17 @@ types
 values
 	
 instance variables
+	id : char;
 	location : Coords;
 	inv hd location>=0 and hd location<20 and hd tl location>=0 and hd tl location<20;
 	direction : Direction;
 	
 operations
 
-	public Airport: int * int * Direction ==> Airport
-	Airport(a,b, dir) ==
+	public Airport: char * int * int * Direction ==> Airport
+	Airport(idA, a,b, dir) ==
 	(
+		id := idA;
 		location :=[a,b];
 		
 		direction := dir; 
@@ -23,6 +25,10 @@ operations
 	)
 	pre a>=0 and a<20 and b>=0 and b<20
 	post hd location = a and hd tl location = b and direction = dir; 
+	
+	public getID: () ==> char
+	getID() == return id
+	post RESULT = id;
 	
 	public getLocation: () ==> Coords
 	getLocation() == return location

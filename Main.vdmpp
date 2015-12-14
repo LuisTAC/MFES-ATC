@@ -14,6 +14,7 @@ instance variables
 
 	planes : seq of Plane;
 	beacons : seq of Coords;
+	airports : seq of Airport;
 	
 operations
 	
@@ -67,6 +68,21 @@ operations
 		let l1^[coord]^l2 = planes in planes := l1^l2;
 	)
 	post len beacons = len beacons~-1;
+	
+	public addAirport: Airport ==> ()
+	addAirport(a) ==
+	(
+		IO`print("Adding an airport ID = "^[a.getID()]);
+		airports := [a]^airports;
+	)
+	post len airports = len airports~+1;
+	
+	public removeAirport: Airport ==> ()
+	removeAirport(a) == 
+	(
+		let l1^[a]^l2 = airports in airports := l1^l2;
+	)
+	post len airports = len airports~-1;
 	
 functions
 	
