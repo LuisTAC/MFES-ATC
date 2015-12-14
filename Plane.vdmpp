@@ -20,7 +20,8 @@ instance variables
 	max_speed : nat;
 	speed : nat;
 	inv speed <= max_speed;
-	direction : Direction;		
+	direction : Direction;
+	achvdGoal : bool := false;
 operations
 
 	public Plane: char * int * int * int * int * nat * nat * Direction ==> Plane
@@ -80,8 +81,12 @@ operations
 	public getSpeed: () ==> nat
 	getSpeed() == return speed
 	post RESULT = speed;
-		
-		public rotCW: () ==> ()
+	
+	public getAchvd: () ==> bool
+	getAchvd() == return achvdGoal
+	post RESULT = achvdGoal;
+	
+	public rotCW: () ==> ()
 	rotCW() ==
 	(
 		cases direction :
@@ -94,7 +99,8 @@ operations
 		<W> -> direction:= <NW>,
 		<NW> -> direction:= <N>
 		end;
-	);
+	)
+	post direction<>direction~;
 	
 	public rotCCW: () ==> ()
 	rotCCW() ==
@@ -110,7 +116,8 @@ operations
 		<E> -> direction:= <NE>,
 		<NE> -> direction:= <N>
 		end;
-	);
+	)
+	post direction<>direction~;
 	
 	public move: () ==> ()
 	move() ==
@@ -124,9 +131,22 @@ operations
 			<SW> -> location := [hd location-1, hd tl location+1],
 			<W> -> location := [hd location-1, hd tl location],
 			<NW> -> location := [hd location-1, hd tl location-1]
-		end
+		end;
+		checkGoal();
 	)
-	post direction<>direction~;
+	post location<>location~;
+	
+	public checkGoal: () ==> ()
+	checkGoal() ==
+	(
+		achvdGoal := ((hd location = hd destination) and (hd tl location = hd tl destination));
+	);
+	
+	public setDest: int * int ==> ()
+	setDest(a, b) == 
+	(
+		destination := [a, b]
+	);
 	
 functions
 

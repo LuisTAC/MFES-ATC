@@ -12,15 +12,20 @@ values
 	
 instance variables
 
-	planes : seq of Plane;
-	beacons : seq of Coords;
-	airports : seq of Airport;
+	planes : seq of Plane := [];
+	idPlanes : seq of char := [];
+	beacons : seq of Coords := [];
+	airports : seq of Airport := [];
 	
 operations
 	
 	public getPlanes: () ==> seq of Plane
 	getPlanes() == return planes
 	post RESULT = planes;
+	
+	public getIDPlanes: () ==> seq of char
+	getIDPlanes() == return idPlanes
+	post RESULT = idPlanes;
 	
 	public getBeacons: () ==> seq of Coords
 	getBeacons() == return beacons
@@ -40,7 +45,8 @@ operations
 	addPlane(p) == 
 	(
 		IO`print("Adding plane ID = "^[p.getID()]);
-		planes := [p]^planes
+		planes := [p]^planes;
+		idPlanes := [p.getID()]^idPlanes;
 	)
 	post len planes = len planes~+1;
 	
@@ -59,7 +65,6 @@ operations
 		beacons := [coord]^beacons;
 	)
 	post len beacons = len beacons~+1;
-	
 	
 	public removeBeacon: int * int ==> ()
 	removeBeacon(x, y) == 
@@ -84,6 +89,67 @@ operations
 	)
 	post len airports = len airports~-1;
 	
+	public movePlanes: () ==> ()
+	movePlanes() ==
+	(
+		for i = 1 to len planes do
+		(
+			IO`print("Moving plane "^[planes(i).getID()]);
+			planes(i).move();
+		)
+	);
+	
+	public remGoalPlanes: () ==> ()
+	remGoalPlanes() ==
+	(
+		for p in planes do
+			if p.getAchvd() then removePlane(p);
+	);
+	
+	public checkColisions: () ==> bool
+	checkColisions() ==
+	(
+		for p1 in planes do
+			for p2 in planes do
+			if (hd p1.getLocation() = hd p2.getLocation() and hd tl p1.getLocation() = hd tl p2.getLocation()) then
+				return true; 
+		return false;
+	);
+
+	-- Command Rotations to planes --
+	
+	public commandRotCW: char ==> ()
+	commandRotCW(id) ==
+	(
+		for p in planes do
+		(
+			if(p.getID() = id) then
+				p.rotCW();
+		);
+	)
+	pre id in set elems idPlanes;
+	
+	public commandRotCCW: char ==> ()
+	commandRotCCW(id) ==
+	(
+		for p in planes do
+		(
+			if(p.getID() = id) then
+				p.rotCCW();
+		);
+	)
+	pre id in set elems idPlanes;
+
+  public commandDest: char * int * int ==> ()
+	commandDest(id, a,b) ==
+	(
+		for p in planes do 
+		(
+			if(p.getID() = id) then
+				p.setDest(a,b);
+		);
+	);
+
 functions
 	
 	-- TODO Define functiones here
