@@ -1,28 +1,44 @@
 class Airport
 
 types
+	public Coords = seq of int
+	inv  c == (len c = 2);
 	public Direction  = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
 values
 	
 instance variables
 	location : Coords;
+	inv hd location>=0 and hd location<20 and hd tl location>=0 and hd tl location<20;
 	direction : Direction;
-	planes : seq of Plane;
 	
 operations
 
 	public Airport: int * int * Direction ==> Airport
 	Airport(a,b, dir) ==
 	(
-		location := new Coords(a,b);
+		location :=[a,b];
+		
 		direction := dir; 
 		return self;
-	);
-	--TODO post
+	)
+	pre a>=0 and a<20 and b>=0 and b<20
+	post hd location = a and hd tl location = b and direction = dir; 
 	
 	public getLocation: () ==> Coords
 	getLocation() == return location
 	post RESULT = location;
+	
+	public getX: () ==> int
+	getX() == return hd location
+	post RESULT = hd location;
+	
+	public getY: () ==> int
+	getY() == return hd tl location
+	post RESULT = hd tl location;
+	
+	public getDirection: () ==> Direction
+	getDirection() == return direction
+	post RESULT = direction;
 
 functions
 	

@@ -1,20 +1,72 @@
 class Main
 
 types
+
+	public Coords = seq of int
+	inv  c == (len c = 2);
+	public String = seq of char;
 	
-	-- TODO Define types here
+	public Direction  = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
 	
 values
 	
-	-- TODO Define values here
-	
 instance variables
 
-	-- TODO Define instance variables here
+	planes : seq of Plane;
+	beacons : seq of Coords;
 	
 operations
 	
-	-- TODO Define operations here
+	public getPlanes: () ==> seq of Plane
+	getPlanes() == return planes
+	post RESULT = planes;
+	
+	public getBeacons: () ==> seq of Coords
+	getBeacons() == return beacons
+	post RESULT = beacons;
+	
+	public getPlaneByID: char ==> Plane
+	getPlaneByID(id) == 
+	(
+		dcl plane : Plane := new Plane('a', -1, -1, -2, -2, 10, 5, <N>);
+		for i = 1 to len planes do
+			if(planes(i).getID() = id) then return planes(i);
+		
+		return plane;
+	);
+	
+	public addPlane: Plane ==> ()
+	addPlane(p) == 
+	(
+		IO`print("Adding plane ID = "^[p.getID()]);
+		planes := [p]^planes
+	)
+	post len planes = len planes~+1;
+	
+	public removePlane: Plane ==> ()
+	removePlane(p) ==
+	(
+		let l1^[p]^l2 = planes in planes := l1^l2;
+	)
+	pre p in set elems planes
+	post len planes = len planes~-1;
+	
+	public addBeacon: int * int ==> ()
+	addBeacon(x, y) == 
+	(
+		dcl coord: Coords := [x, y];
+		beacons := [coord]^beacons;
+	)
+	post len beacons = len beacons~+1;
+	
+	
+	public removeBeacon: int * int ==> ()
+	removeBeacon(x, y) == 
+	(
+		dcl coord: Coords := [x, y];
+		let l1^[coord]^l2 = planes in planes := l1^l2;
+	)
+	post len beacons = len beacons~-1;
 	
 functions
 	

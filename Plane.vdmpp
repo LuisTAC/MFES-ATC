@@ -2,39 +2,49 @@ class Plane
 
 types
 
+	public Coords = seq of int
+	inv  c == (len c = 2);
 	public String = seq of char;
-	public Direction = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
+	
+	public Direction  = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
 	
 values
-	
-	-- TODO Define values here
 	
 instance variables
 	
 	id : char;
 	location : Coords;
+	inv hd location>=0 and hd location<20 and hd tl location>=0 and hd tl location<20;
 	destination : Coords;
+	inv hd destination>=0 and hd destination<20 and hd tl destination>=0 and hd tl destination<20;
 	max_speed : nat;
 	speed : nat;
-	inv speed <=max_speed;
-	direction : Direction;
-		
+	inv speed <= max_speed;
+	direction : Direction;		
 operations
 
 	public Plane: char * int * int * int * int * nat * nat * Direction ==> Plane
 	Plane(chr, loc_x,loc_y,dest_x,dest_y,max,speed_init, dir) ==
 	(
 		id := chr;
-		location := new Coords(loc_x,loc_y);
-		destination := new Coords(dest_x,dest_y);
+		location := [loc_x,loc_y];
+		destination := [dest_x,dest_y];
 		max_speed := max;
 		speed := speed_init;
 		direction := dir;
 		return self;
 	)
-	pre ((loc_x<>dest_x) or (loc_y<>dest_y)) and (max>=speed_init);
-	--TODO post
-		
+	pre ((loc_x<>dest_x) or (loc_y<>dest_y)) and (max>=speed_init)
+	post id = chr and hd location = loc_x and hd tl location = loc_y and hd destination = loc_x and hd tl destination = loc_y
+			 and max_speed = max and speed = speed_init and direction = dir;
+	
+	public getDirection: () ==> Direction
+	getDirection() == 
+	(
+		return direction;
+	)
+	post RESULT = direction;
+	
 	public getID: () ==> char
 	getID() == return id
 	post RESULT = id;
@@ -43,6 +53,26 @@ operations
 	getLocation() == return location
 	post RESULT = location;
 	
+	public getX: () ==> int
+	getX() == return hd location
+	post RESULT = hd location;
+	
+	public getY: () ==> int
+	getY() == return hd tl location
+	post RESULT = hd tl location;
+	
+	public getDestination: () ==> Coords
+	getDestination() == return destination
+	post RESULT = destination;
+	
+	public getDestX: () ==> int
+	getDestX() == return hd destination
+	post RESULT = hd destination;
+	
+	public getDestY: () ==> int
+	getDestY() == return hd tl destination
+	post RESULT = hd tl destination;
+	
 	public getMaxSpeed: () ==> nat
 	getMaxSpeed() == return max_speed
 	post RESULT = max_speed;
@@ -50,12 +80,8 @@ operations
 	public getSpeed: () ==> nat
 	getSpeed() == return speed
 	post RESULT = speed;
-	
-	public getDirection: () ==> Direction
-	getDirection() == return direction
-	post RESULT = direction;
 		
-	public rotCW: () ==> ()
+		public rotCW: () ==> ()
 	rotCW() ==
 	(
 		cases direction :
@@ -90,14 +116,14 @@ operations
 	move() ==
 	(
 		cases direction :
-			<N> -> location.setY(location.getY()-1),
-			<NE> -> (location.setY(location.getY()-1); location.setX(location.getX()+1)),
-			<E> -> location.setX(location.getX()+1),
-			<SE> -> (location.setY(location.getY()+1); location.setX(location.getX()+1)),
-			<S> -> location.setY(location.getY()+1),
-			<SW> -> (location.setY(location.getY()+1); location.setX(location.getX()-1)),
-			<W> -> location.setX(location.getX()-1),
-			<NW> -> (location.setY(location.getY()-1); location.setX(location.getX()-1))
+			<N> -> location := [hd location, hd tl location - 1],
+			<NE> -> location := [hd location+1, hd tl location-1],
+			<E> -> location := [hd location +1, hd tl location],
+			<SE> -> location := [hd location+1, hd tl location+1],
+			<S> -> location := [hd location, hd tl location+1],
+			<SW> -> location := [hd location-1, hd tl location+1],
+			<W> -> location := [hd location-1, hd tl location],
+			<NW> -> location := [hd location-1, hd tl location-1]
 		end
 	)
 	post direction<>direction~;
