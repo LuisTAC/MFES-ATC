@@ -1,0 +1,59 @@
+class TestMain
+types
+	public Coords = seq of int
+	inv  c == (len c = 2);
+	public String = seq of char;
+	
+values
+-- TODO Define values here
+instance variables
+-- TODO Define instance variables here
+operations
+	public TestMain: () ==> TestMain
+	TestMain() ==
+	(
+		return self;
+	);
+	
+	private assertTrue: bool ==> ()
+  assertTrue(cond) == return
+  pre cond;
+  
+  public correctAddPlane: () ==> ()
+  correctAddPlane() ==
+  (
+  	dcl m: Main := new Main();
+  	
+  	-- Declares a plane var
+  	dcl p: Plane := new Plane('P', 5,5, 3,3, 20, 5, <NE>);
+  	assertTrue(len m.getPlanes() = 0);
+  	
+  	-- Adds a plane to the array in main
+  	m.addPlane(p);
+  	
+  	assertTrue(len m.getPlanes() = 1);
+  );
+  
+  public removePlane: () ==> ()
+  removePlane() ==
+  (
+  	dcl m: Main := new Main();
+  	
+  	-- Declares a plane var
+  	dcl p: Plane := new Plane('P', 5,5, 3,3, 20, 5, <NE>);
+  	assertTrue(len m.getPlanes() = 0);
+  	
+  	-- Adds a plane to the array in main
+  	m.addPlane(p);
+  	assertTrue(len m.getPlanes() = 1);
+  	
+  	-- Removes the plain
+  	m.removePlane(p);
+  	assertTrue(len m.getPlanes() = 0);
+  );
+  
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end TestMain
