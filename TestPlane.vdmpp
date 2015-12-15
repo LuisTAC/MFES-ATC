@@ -1,0 +1,119 @@
+class TestPlane
+types
+	
+	public Coords = seq of int
+	inv  c == (len c = 2);
+	public String = seq of char;
+	
+	public Direction  = <N>|<NE>|<E>|<SE>|<S>|<SW>|<W>|<NW>;
+	
+values
+-- TODO Define values here
+instance variables
+-- TODO Define instance variables here
+operations
+
+	public TestPlane: () ==> TestPlane
+	TestPlane () ==
+	(
+		return self;
+	);
+
+	private assertTrue: bool ==> ()
+	assertTrue(cond) == return
+	pre cond;
+
+	public testRotCW_Move: () ==> ()
+	testRotCW_Move() ==
+	(
+		dcl p : Plane := new Plane('A', 1,1,5,5,20,10, <N>);
+		
+		assertTrue(p.getDirection()=<N>);
+		assertTrue(hd p.getLocation() = 1 and hd tl p.getLocation() = 1);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<NE>);
+		assertTrue(hd p.getLocation() = 2 and hd tl p.getLocation() = 0);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<E>);
+		assertTrue(hd p.getLocation() = 3 and hd tl p.getLocation() = 0);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<SE>);
+		assertTrue(hd p.getLocation() = 4 and hd tl p.getLocation() = 1);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<S>);
+		assertTrue(hd p.getLocation() = 4 and hd tl p.getLocation() = 2);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<SW>);
+		assertTrue(hd p.getLocation() = 3 and hd tl p.getLocation() = 3);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<W>);
+		assertTrue(hd p.getLocation() = 2 and hd tl p.getLocation() = 3);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<NW>);
+		assertTrue(hd p.getLocation() = 1 and hd tl p.getLocation() = 2);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<N>);
+		assertTrue(hd p.getLocation() = 1 and hd tl p.getLocation() = 1);
+	);
+
+	public testRotCWW_Move: () ==> ()
+	testRotCWW_Move() ==
+	(
+		dcl p : Plane := new Plane('A', 10,10,5,5,20,10, <N>);
+		
+		assertTrue(p.getDirection()=<N>);
+		assertTrue(hd p.getLocation() = 10 and hd tl p.getLocation() = 10);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<NW>);
+		assertTrue(hd p.getLocation() = 9 and hd tl p.getLocation() = 9);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<W>);
+		assertTrue(hd p.getLocation() = 8 and hd tl p.getLocation() = 9);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<SW>);
+		assertTrue(hd p.getLocation() = 7 and hd tl p.getLocation() = 10);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<S>);
+		assertTrue(hd p.getLocation() = 7 and hd tl p.getLocation() = 11);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<SE>);
+		assertTrue(hd p.getLocation() = 8 and hd tl p.getLocation() = 12);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<E>);
+		assertTrue(hd p.getLocation() = 9 and hd tl p.getLocation() = 12);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<NE>);
+		assertTrue(hd p.getLocation() = 10 and hd tl p.getLocation() = 11);
+		p.rotCW();
+		p.move();
+		assertTrue(p.getDirection()=<N>);
+		assertTrue(hd p.getLocation() = 10 and hd tl p.getLocation() = 10);
+	);
+
+	public runTests: () ==> ()
+	runTests() ==
+	(
+		testRotCW_Move();
+		testRotCWW_Move();
+		IO`println("tests ran");	
+	);
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end TestPlane
